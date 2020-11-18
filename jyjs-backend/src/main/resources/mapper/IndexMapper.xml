@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prlife.jyjs.mapper.IndexMapper">
+    <resultMap id="BaseResultMap" type="com.prlife.jyjs.entity.Index">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="index_code" property="indexCode" jdbcType="VARCHAR"/>
+        <result column="index_name" property="indexName" jdbcType="VARCHAR"/>
+        <result column="work_matters" property="workMatters" jdbcType="VARCHAR"/>
+        <result column="index_description" property="indexDescription" jdbcType="VARCHAR"/>
+        <result column="enable_flag" property="enableFlag" jdbcType="INTEGER"/>
+        <result column="matter_type_id" property="matterTypeId" jdbcType="INTEGER"/>
+        <result column="company_id" property="companyId" jdbcType="INTEGER"/>
+        <result column="line_id" property="lineId" jdbcType="INTEGER"/>
+        <result column="responsible_department_id" property="responsibleDepartmentId" jdbcType="INTEGER"/>
+        <result column="overlay_flag" property="overlayFlag" jdbcType="INTEGER"/>
+        <result column="key_position_index_flag" property="keyPositionIndexFlag" jdbcType="INTEGER"/>
+        <result column="report_flag" property="reportFlag" jdbcType="INTEGER"/>
+        <result column="preconditions" property="preconditions" jdbcType="VARCHAR"/>
+        <result column="billing_cycle_id" property="billingCycleId" jdbcType="INTEGER"/>
+        <result column="task_source_id" property="taskSourceId" jdbcType="INTEGER"/>
+        <result column="report_type_id" property="reportTypeId" jdbcType="INTEGER"/>
+        <result column="deduction_type" property="deductionType" jdbcType="INTEGER"/>
+        <result column="disclaimer_flag" property="disclaimerFlag" jdbcType="INTEGER"/>
+        <result column="reissue_flag" property="reissueFlag" jdbcType="INTEGER"/>
+        <result column="completion_rate_type_id" property="completionRateTypeId" jdbcType="INTEGER"/>
+        <result column="upper_completion_rate" property="upperCompletionRate" jdbcType="FLOAT"/>
+        <result column="lower_completion_rate" property="lowerCompletionRate" jdbcType="FLOAT"/>
+        <result column="delivery" property="delivery" jdbcType="INTEGER"/>
+        <result column="report_rule_id" property="reportRuleId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+    id, index_code, index_name, work_matters, index_description, enable_flag,matter_type_id,company_id,line_id,responsible_department_id,
+    overlay_flag,key_position_index_flag,report_flag,preconditions,billing_cycle_id,task_source_id,
+    report_type_id,deduction_type,disclaimer_flag,reissue_flag,completion_rate_type_id,upper_completion_rate,
+    lower_completion_rate,delivery,report_rule_id
+  </sql>
+
+    <sql id="base_column_list_except_id">
+    index_code, index_name, work_matters, index_description, enable_flag,matter_type_id,company_id,line_id,responsible_department_id,
+    overlay_flag,key_position_index_flag,report_flag,preconditions,billing_cycle_id,task_source_id,
+    report_type_id,deduction_type,disclaimer_flag,reissue_flag,completion_rate_type_id,upper_completion_rate,
+    lower_completion_rate,delivery,report_rule_id
+  </sql>
+
+    <select id="queryIndexById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="base_column_list"></include>
+        from index_library
+        where id=#{id}
+    </select>
+
+    <select id="queryIndexByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="base_column_list"></include>
+        from index_library
+        where index_code=#{indexCode}
+    </select>
+
+    <select id="queryAllIndex" resultMap="BaseResultMap">
+        select
+        <include refid="base_column_list"></include>
+        from index_library
+        where 1=1
+    </select>
+
+
+    <insert id="addIndex" parameterType="com.prlife.jyjs.entity.Index">
+        insert into index_library(
+        <include refid="base_column_list_except_id"></include>
+        ) values(
+        #{indexCode},
+        #{indexName},
+        #{workMatters},
+        #{indexDescription},
+        #{enableFlag},
+        #{matterTypeId},
+        #{companyId},
+        #{lineId},
+        #{responsibleDepartmentId},
+        #{overlayFlag},
+        #{keyPositionIndexFlag},
+        #{reportFlag},
+        #{preconditions},
+        #{billingCycleId},
+        #{taskSourceId},
+        #{reportTypeId},
+        #{deductionType},
+        #{disclaimerFlag},
+        #{reissueFlag},
+        #{completionRateTypeId},
+        #{upperCompletionRate},
+        #{lowerCompletionRate},
+        #{delivery},
+        #{reportRuleId}
+        )
+    </insert>
+
+    <delete id="deleteIndexByCode" parameterType="java.lang.String">
+        delete from index_library where index_code=#{indexCode}
+    </delete>
+
+    <update id="updateIndex" parameterType="com.prlife.jyjs.entity.Index">
+        update index_library
+        <set>
+            <if test="indexName!=null">
+                index_name=#{indexName},
+            </if>
+            <if test="workMatters!=null">
+                work_matters=#{workMatters},
+            </if>
+            <if test="indexDescription!=null">
+                index_description=#{indexDescription},
+            </if>
+        </set>
+        where index_code=#{indexCode}
+
+    </update>
+
+</mapper>

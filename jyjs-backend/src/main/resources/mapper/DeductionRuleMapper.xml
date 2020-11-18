@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prlife.jyjs.mapper.DeductionRuleMapper">
+    <resultMap id="BaseResultMap" type="com.prlife.jyjs.entity.DeductionRule">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="index_id" property="indexId" jdbcType="INTEGER"/>
+        <result column="index_code" property="indexCode" jdbcType="VARCHAR"/>
+        <result column="index_name" property="indexName" jdbcType="VARCHAR"/>
+        <result column="rule_year" property="ruleYear" jdbcType="VARCHAR"/>
+        <result column="completion_rate_type" property="completionRateType" jdbcType="VARCHAR"/>
+        <result column="upper_limit" property="upperLimit" jdbcType="FLOAT"/>
+        <result column="lower_limit" property="lowerLimit" jdbcType="FLOAT"/>
+        <result column="deduction_rule_des" property="deductionRuleDes" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="base_column_list">
+        id,index_id,
+    (select index_code from index_library where id=index_id) index_code,
+    (select index_name from index_library where id=index_id) index_name,
+    rule_year,completion_rate_type,upper_limit,lower_limit,deduction_rule_des
+    </sql>
+
+    <sql id="base_column_list_except_id">
+        index_id,
+    (select index_code from index_library where id=index_id) index_code,
+    (select index_name from index_library where id=index_id) index_name,
+    rule_year,completion_rate_type,upper_limit,lower_limit,deduction_rule_des
+    </sql>
+
+    <select id="queryDeductionRuleById" resultMap="BaseResultMap">
+        select
+        <include refid="base_column_list"></include>
+        from deduction_rule
+        where id=#{id}
+    </select>
+
+    <select id="queryDeductionRuleByIndexCode" resultMap="BaseResultMap">
+        select
+        <include refid="base_column_list"></include>
+        from deduction_rule
+        where rule_year=#{ruleYear}
+        and (select index_code from index_library where id=index_id)=#{indexCode}
+    </select>
+
+    <select id="queryAllDeductionRule" resultMap="BaseResultMap">
+        select
+        <include refid="base_column_list"></include>
+        from deduction_rule
+        where rule_year=#{ruleYear}
+    </select>
+
+
+    <insert id="addDeductionRule">
+        insert into deduction_rule(index_id,
+                                   rule_year,
+                                   completion_rate_type,
+                                   upper_limit,
+                                   lower_limit,
+                                   deduction_rule_des)
+        values (#{indexId},
+                #{ruleYear},
+                #{completionRateType},
+                #{upperLimit},
+                #{lowerLimit},
+                #{deductionRuleDes})
+    </insert>
+
+    <delete id="deleteDeductionRule">
+        delete
+        from deduction_rule
+        where rule_year = #{ruleYear}
+          and (select index_code from index_library where id = index_id) = #{indexCode}
+    </delete>
+
+    <update id="updateDeductionRule" parameterType="com.prlife.jyjs.entity.DeductionRule">
+        update deduction_rule
+        <set>
+            <if test="completionRateType!=null">
+                completion_rate_type=#{completionRateType},
+            </if>
+            <if test="upperLimit!=null">
+                upper_limit=#{upperLimit},
+            </if>
+            <if test="lowerLimit!=null">
+                lower_limit=#{lowerLimit},
+            </if>
+            <if test="deductionRuleDes!=null">
+                deduction_rule_des=#{deductionRuleDes},
+            </if>
+        </set>
+        where rule_year=#{ruleYear}
+        and (select index_code from index_library where id = index_id) = #{indexCode}
+
+    </update>
+
+</mapper>
